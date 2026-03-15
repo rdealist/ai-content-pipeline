@@ -1,9 +1,9 @@
 ---
 name: content-pipeline-publish
-description: "多平台内容分发Skill。将output/目录中已生成的内容按照SOP流程发布到各平台。支持与xiaohongshu-publisher和media-auto-publisher联动实现自动发布。当用户说"发布内容"、"分发到各平台"、"发布文章"、"推送"时使用此Skill。"
+description: "多平台内容分发Skill。将output/目录中已生成的内容按照SOP流程发布到各平台。支持X/Twitter（infsh CLI）、知乎、掘金、小红书、即刻。当用户说"发布内容"、"推送到平台"、"一键发布"时使用此Skill。"
 metadata:
-  version: 1.0.0
-  domains: [publishing, distribution, automation]
+  version: 1.1.0
+  domains: [publishing, automation, distribution]
   type: automation
 ---
 
@@ -26,6 +26,7 @@ ls -la /Users/wushihong/dev/ai-content-pipeline/output/
 ls -la /Users/wushihong/dev/ai-content-pipeline/output/xiaohongshu/ 2>/dev/null
 ls -la /Users/wushihong/dev/ai-content-pipeline/output/jike/ 2>/dev/null
 ls -la /Users/wushihong/dev/ai-content-pipeline/output/zhihu/ 2>/dev/null
+ls -la /Users/wushihong/dev/ai-content-pipeline/output/x/ 2>/dev/null
 ```
 
 如果 output/ 为空，提示用户先运行 `content-pipeline-gen` Skill 生成内容。
@@ -47,6 +48,8 @@ cat /Users/wushihong/dev/ai-content-pipeline/sops/zhihu.md
 - [ ] 小红书笔记标题 ≤ 20字？
 - [ ] 小红书笔记正文 ≤ 1000字？
 - [ ] 知乎文章开头200字包含核心关键词？
+- [ ] X Thread每条推文 ≤ 280字符？
+- [ ] X Thread Hook推文 ≤ 200字符？
 - [ ] 所有内容不含公司名称/业务细节？
 - [ ] 所有引流话术符合SOP规范？
 
@@ -57,8 +60,9 @@ cat /Users/wushihong/dev/ai-content-pipeline/sops/zhihu.md
 ```
 1. 知乎（SEO权重最高，先发先索引）
 2. 掘金（技术社区同步）
-3. 小红书（按SOP最佳时段发布）
-4. 即刻（碎片时间发布）
+3. X/Twitter（国际社区，Thread发布）
+4. 小红书（按SOP最佳时段发布）
+5. 即刻（碎片时间发布）
 ```
 
 ### Step 3: 知乎发布
@@ -82,7 +86,35 @@ ls ~/.agents/skills/media-auto-publisher/scripts/ 2>/dev/null
 2. 展示给用户复制到掘金编辑器
 3. 提醒添加标签和分类
 
-### Step 5: 小红书发布
+### Step 5: X/Twitter 发布
+
+读取 X 平台SOP：
+```bash
+cat /Users/wushihong/dev/ai-content-pipeline/sops/x-twitter.md
+```
+
+**自动发布（推荐，通过 inference.sh CLI）**：
+```bash
+# 检查 infsh 是否可用
+which infsh 2>/dev/null
+
+# 如果可用，逐条发布Thread
+# 读取 output/x/ 下的thread文件，解析每条推文
+# 依次调用：
+infsh app run x/post-tweet --input '{"text": "<tweet_text>"}'
+```
+
+**手动发布流程**（infsh不可用时）：
+1. 读取 `output/x/` 下的Thread文件
+2. 展示每条推文内容
+3. 用户手动复制到X发布
+
+**Thread发布注意事项**：
+- Thread各条推文需要按顺序发布（reply to previous）
+- 每条之间间隔几秒防止限流
+- 发布后检查Thread是否串联正确
+
+### Step 6: 小红书发布
 
 **手动发布流程**：
 1. 依次读取 `output/xiaohongshu/` 下的笔记文件
@@ -97,14 +129,14 @@ ls ~/.agents/skills/xiaohongshu-publisher/ 2>/dev/null
 python3 ~/.agents/skills/xiaohongshu-publisher/simple_publish.py "标题" "正文内容"
 ```
 
-### Step 6: 即刻发布
+### Step 7: 即刻发布
 
 **手动发布流程**：
 1. 读取 `output/jike/` 下的动态文件
 2. 展示给用户复制到即刻
 3. 提醒发布到相关圈子
 
-### Step 7: 发布后跟踪
+### Step 8: 发布后跟踪
 
 生成发布记录并更新数据追踪文件：
 
@@ -133,14 +165,19 @@ published:
     jike:
       posts_count: N
       published: true
+    x:
+      thread_url: ""
+      tweets_count: N
+      published: true
 ```
 
-### Step 8: 互动提醒
+### Step 9: 互动提醒
 
 根据SOP设置提醒：
 - "发布后30分钟内回复所有评论。"
 - "小红书评论区自己留言补充信息以增加曝光。"
 - "知乎文章评论区感谢第一个点赞的人。"
+- "X发布后1小时内回复前几条评论，触发推荐算法。"
 
 ## 平台发布时间参考
 
@@ -148,6 +185,7 @@ published:
 |------|---------|---------|
 | 知乎 | 随时（SEO导向） | - |
 | 掘金 | 工作日 9:00-11:00 | 14:00-16:00 |
+| X/Twitter | 周二/四 22:00 (UTC+8) | 美西时间早上 |
 | 小红书 | 12:00-13:00 | 18:00-19:00, 21:00-22:00 |
 | 即刻 | 8:00-9:00, 12:00 | 21:00-22:00 |
 
@@ -157,7 +195,9 @@ published:
 
 | Skill | 联动方式 |
 |-------|---------|
+| `twitter-automation` | X/Twitter 自动发Thread（通过 infsh CLI） |
 | `xiaohongshu-publisher` | 小红书自动发布（需MCP服务） |
 | `media-auto-publisher` | 多平台自动发布（需Playwright） |
+| `playwright-automation` | 通用浏览器自动化（知乎/掘金/即刻） |
 | `content-pipeline-gen` | 先生成内容，再调用本Skill发布 |
 | `content-pipeline-review` | 发布后7天调用Review复盘数据 |

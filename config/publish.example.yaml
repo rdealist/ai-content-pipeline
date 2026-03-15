@@ -1,0 +1,59 @@
+# AI Content Pipeline — 平台发布配置
+# 复制此文件到 ~/.ai-content-pipeline/publish.yaml 并填入你的账号信息
+# 敏感信息请勿提交到Git
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# X/Twitter — 通过 inference.sh CLI
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+x:
+  enabled: true
+  method: "infsh"  # infsh | tweepy | playwright
+  # ── infsh 方案（推荐）──
+  # 运行 `infsh login` 完成 OAuth 授权即可，无需填写密钥
+  # ── tweepy 方案（备选）──
+  # api_key: ""
+  # api_secret: ""
+  # access_token: ""
+  # access_token_secret: ""
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 知乎 — 通过 Playwright 浏览器自动化
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+zhihu:
+  enabled: false
+  method: "playwright"
+  cookie_file: "~/.ai-content-pipeline/cookies/zhihu.json"
+  # 获取Cookie：手动登录后用 media-auto-publisher 导出
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 掘金 — 通过 Playwright 浏览器自动化
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+juejin:
+  enabled: false
+  method: "playwright"
+  cookie_file: "~/.ai-content-pipeline/cookies/juejin.json"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 小红书 — 通过 MCP API 或 Playwright
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+xiaohongshu:
+  enabled: false
+  method: "mcp"  # mcp | playwright
+  mcp_endpoint: "http://localhost:18060"
+  cookie_file: "~/.ai-content-pipeline/cookies/xiaohongshu.json"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 即刻 — 通过 Playwright 浏览器自动化
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+jike:
+  enabled: false
+  method: "playwright"
+  cookie_file: "~/.ai-content-pipeline/cookies/jike.json"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 微信公众号 — 通过 Playwright 浏览器自动化
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+wechat:
+  enabled: false
+  method: "playwright"
+  cookie_file: "~/.ai-content-pipeline/cookies/wechat.json"

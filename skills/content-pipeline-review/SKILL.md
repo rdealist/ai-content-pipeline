@@ -1,10 +1,6 @@
 ---
 name: content-pipeline-review
-description: "内容数据复盘Skill。自动汇总各平台发布数据，生成周报，分析内容表现，给出下周策略建议。当用户说"数据复盘"、"周报"、"内容分析"、"复盘"、"看看数据"时使用此Skill。"
-metadata:
-  version: 1.0.0
-  domains: [analytics, review, content-strategy]
-  type: automation
+description: Use when reviewing weekly content performance, summarizing cross-platform publishing data, or planning the next round of content strategy.
 ---
 
 # Content Pipeline Review

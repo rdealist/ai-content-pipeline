@@ -1,15 +1,11 @@
 ---
 name: content-pipeline-gen
-description: "AI内容生产流水线的核心Skill。根据Spec文件自动生成多平台内容：技术博客长文 + 小红书笔记 + 即刻动态 + 知乎回答。当用户说"写一篇文章"、"从spec生成内容"、"生成博客"、"根据spec写"、"内容生产"时使用此Skill。"
-metadata:
-  version: 1.0.0
-  domains: [content, writing, automation, ai-pipeline]
-  type: automation
+description: Use when generating a blog post and related multi-platform content from a single spec file in this repository.
 ---
 
 # Content Pipeline Generator
 
-从一份Spec出发，自动生成四平台内容，实现"一次创作，四平台分发"。
+从一份Spec出发，自动生成五平台内容，实现"一次创作，五平台分发"。
 
 ## 触发词
 
@@ -141,7 +137,38 @@ cat prompts/zhihu-answer.md
 
 保存到 `output/zhihu/` 目录。
 
-### Step 6: 格式化输出
+### Step 6: 生成 X/Twitter Thread
+
+读取 X/Twitter Prompt模板：
+```bash
+cat prompts/twitter-thread.md
+```
+
+参考 X 平台SOP：
+```bash
+cat sops/x-twitter.md
+```
+
+将长文拆解为 5-12 条推文的 Thread：
+
+**Thread结构**：
+```
+Tweet 1 (Hook): 反直觉观点/惊人数据 + 🧵👇（≤200字符）
+Tweet 2-N (Body): 每条一个要点，短句分行（≤280字符）
+Tweet N-1 (TL;DR): 3-5个bullet总结
+Tweet N (CTA): 行动号召 + GitHub链接
+```
+
+**X风格约束**（来自SOP）：
+- 英文为主
+- 每条推文独立可读
+- 用 → 代替冗长解释
+- 标签不超过3个：#BuildInPublic #DevTools #AI
+- Hook推文决定80%阅读率，重点打磨
+
+保存到 `output/x/` 目录，thread整体保存为一个文件。
+
+### Step 7: 格式化输出
 
 使用CLI工具格式化长文为各平台最终格式：
 ```bash
@@ -152,7 +179,7 @@ python scripts/markdown_formatter.py output/<slug>.md -p zhihu -o output/zhihu/
 python scripts/markdown_formatter.py output/<slug>.md -p wechat -o output/wechat/
 ```
 
-### Step 7: 生成发布摘要
+### Step 8: 生成发布摘要
 
 生成一份发布检查清单：
 
@@ -166,12 +193,14 @@ python scripts/markdown_formatter.py output/<slug>.md -p wechat -o output/wechat
 - [ ] 微信格式：output/wechat/<slug>.html
 - [ ] 小红书笔记：output/xiaohongshu/<n>.md × N条
 - [ ] 即刻动态：output/jike/<n>.md × N条
+- [ ] X Thread：output/x/<slug>-thread.md
 
 ### 发布顺序（建议）：
 1. 知乎（SEO权重最高，先发）
 2. 掘金（技术社区）
-3. 小红书（按SOP时间发布）
-4. 即刻（碎片时间发布）
+3. X/Twitter Thread（国际社区，周二/四 22:00发）
+4. 小红书（按SOP时间发布）
+5. 即刻（碎片时间发布）
 
 ### 发布后：
 - [ ] 30分钟内回复各平台评论
@@ -199,5 +228,6 @@ python scripts/markdown_formatter.py output/<slug>.md -p wechat -o output/wechat
     ├── zhihu/        # 知乎格式
     ├── wechat/       # 微信HTML
     ├── xiaohongshu/  # 小红书笔记
-    └── jike/         # 即刻动态
+    ├── jike/         # 即刻动态
+    └── x/            # X/Twitter Thread
 ```

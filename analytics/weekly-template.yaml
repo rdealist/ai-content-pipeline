@@ -48,6 +48,19 @@ juejin:
   total_views: 0
   total_likes: 0
 
+# ── X/Twitter ────────────────────────────────
+x:
+  followers: 0
+  new_followers: 0
+  tweets: 0
+  threads: 0
+  total_impressions: 0
+  total_likes: 0
+  total_retweets: 0
+  total_replies: 0
+  link_clicks: 0  # GitHub链接点击
+  best_tweet: ""
+
 # ── GitHub ───────────────────────────────────
 github:
   stars: 0

@@ -1,9 +1,10 @@
-# Blog from Spec — Claude Code Custom Skill
-# 根据Spec文件生成技术博客初稿
+---
+name: blog-from-spec
+description: Use when generating a technical blog draft from a structured spec file in this repository.
+---
 
----
-description: "Generate a tech blog draft from a structured spec file using AI Content Pipeline prompts"
----
+# Blog from Spec - Claude Code Custom Skill
+# 根据Spec文件生成技术博客初稿
 
 ## Usage
 

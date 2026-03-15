@@ -1,0 +1,71 @@
+# 数据周报模板
+# 每周日填写，追踪各平台数据
+
+week: "2026-W12"  # 修改为当前周
+
+# ── 小红书 ──────────────────────────────────
+xiaohongshu:
+  followers: 0
+  new_followers: 0
+  notes_published: 0
+  total_views: 0
+  total_likes: 0
+  total_collects: 0
+  total_comments: 0
+  private_messages: 0  # 私信数
+  github_referrals: 0  # 通过小红书访问GitHub的人数
+  notes:
+    - title: ""
+      date: ""
+      views: 0
+      likes: 0
+      collects: 0
+      comments: 0
+
+# ── 即刻 ────────────────────────────────────
+jike:
+  followers: 0
+  new_followers: 0
+  posts: 0
+  total_likes: 0
+  total_comments: 0
+  best_post: ""
+
+# ── 知乎 ────────────────────────────────────
+zhihu:
+  followers: 0
+  new_followers: 0
+  answers: 0
+  articles: 0
+  total_upvotes: 0
+  total_views: 0
+  best_content: ""
+
+# ── 掘金 ────────────────────────────────────
+juejin:
+  followers: 0
+  articles: 0
+  total_views: 0
+  total_likes: 0
+
+# ── GitHub ───────────────────────────────────
+github:
+  stars: 0
+  forks: 0
+  visitors: 0  # Insights > Traffic
+  clones: 0
+
+# ── 小报童 ───────────────────────────────────
+xiaobaotong:
+  subscribers: 0
+  revenue: 0
+  articles_published: 0
+
+# ── 汇总 ────────────────────────────────────
+summary:
+  total_content_pieces: 0      # 本周总发布内容数
+  total_time_spent_hours: 0    # 本周总耗时
+  best_performing_content: ""  # 本周最佳内容
+  worst_performing_content: "" # 本周最差内容
+  key_insight: ""              # 本周最重要的发现
+  next_week_focus: ""          # 下周重点调整

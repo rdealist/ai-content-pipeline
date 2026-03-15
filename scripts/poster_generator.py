@@ -1,7 +1,7 @@
 """
 poster_generator.py — 内容卡片/海报生成器
 
-将结构化内容渲染为深色主题的 AMA Notes 风格海报图片。
+将结构化内容渲染为白底黑字 + 随机主题色的卡片海报图片。
 使用 Jinja2 模板 + Playwright 截图实现。
 
 用法:
@@ -30,6 +30,7 @@ poster_generator.py — 内容卡片/海报生成器
 from __future__ import annotations
 
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -38,6 +39,20 @@ import yaml
 from jinja2 import Template
 
 TEMPLATE_PATH = Path(__file__).parent / "poster_template.html"
+
+# 主题色调色板：每次随机选一组，保证白底下可读性好
+THEME_COLORS = [
+    {"accent": "#2563eb", "accent_light": "#dbeafe", "accent_dark": "#1e40af"},  # Blue
+    {"accent": "#7c3aed", "accent_light": "#ede9fe", "accent_dark": "#5b21b6"},  # Violet
+    {"accent": "#059669", "accent_light": "#d1fae5", "accent_dark": "#047857"},  # Emerald
+    {"accent": "#dc2626", "accent_light": "#fee2e2", "accent_dark": "#b91c1c"},  # Red
+    {"accent": "#d97706", "accent_light": "#fef3c7", "accent_dark": "#b45309"},  # Amber
+    {"accent": "#0891b2", "accent_light": "#cffafe", "accent_dark": "#0e7490"},  # Cyan
+    {"accent": "#c026d3", "accent_light": "#fae8ff", "accent_dark": "#a21caf"},  # Fuchsia
+    {"accent": "#4f46e5", "accent_light": "#e0e7ff", "accent_dark": "#3730a3"},  # Indigo
+    {"accent": "#0d9488", "accent_light": "#ccfbf1", "accent_dark": "#0f766e"},  # Teal
+    {"accent": "#e11d48", "accent_light": "#ffe4e6", "accent_dark": "#be123c"},  # Rose
+]
 
 
 def load_data(json_path: str | None = None, yaml_path: str | None = None) -> dict:
@@ -51,8 +66,19 @@ def load_data(json_path: str | None = None, yaml_path: str | None = None) -> dic
     raise ValueError("必须提供 --json 或 --yaml 参数")
 
 
+def pick_theme(data: dict) -> dict:
+    """注入随机主题色（如果数据中未指定）。"""
+    if "accent_color" not in data:
+        theme = random.choice(THEME_COLORS)
+        data["accent_color"] = theme["accent"]
+        data["accent_light"] = theme["accent_light"]
+        data["accent_dark"] = theme["accent_dark"]
+    return data
+
+
 def render_html(data: dict) -> str:
     """用 Jinja2 渲染 HTML 海报。"""
+    data = pick_theme(data)
     template_text = TEMPLATE_PATH.read_text(encoding="utf-8")
     template = Template(template_text)
     return template.render(**data)

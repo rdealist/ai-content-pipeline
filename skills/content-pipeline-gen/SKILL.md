@@ -179,6 +179,19 @@ python scripts/markdown_formatter.py output/<slug>.md -p zhihu -o output/zhihu/
 python scripts/markdown_formatter.py output/<slug>.md -p wechat -o output/wechat/
 ```
 
+### Step 7.5: 生成内容海报
+
+从长文中提取 Q&A 结构数据，生成深色主题卡片海报图片：
+
+1. **提取数据**：从长文中提取 4-8 个核心 Q&A 对，每个 2-4 个精简要点
+2. **保存 YAML**：以 `output/poster/<slug>-data.yaml` 保存数据文件
+3. **生成海报**：
+```bash
+python scripts/poster_generator.py --yaml output/poster/<slug>-data.yaml -o output/poster/<slug>.png
+```
+
+数据格式参考 `skills/poster-gen/SKILL.md` 中的说明。海报可作为各平台的封面配图使用。
+
 ### Step 8: 生成发布摘要
 
 生成一份发布检查清单：
@@ -194,6 +207,7 @@ python scripts/markdown_formatter.py output/<slug>.md -p wechat -o output/wechat
 - [ ] 小红书笔记：output/xiaohongshu/<n>.md × N条
 - [ ] 即刻动态：output/jike/<n>.md × N条
 - [ ] X Thread：output/x/<slug>-thread.md
+- [ ] 内容海报：output/poster/<slug>.png
 
 ### 发布顺序（建议）：
 1. 知乎（SEO权重最高，先发）
@@ -229,5 +243,6 @@ python scripts/markdown_formatter.py output/<slug>.md -p wechat -o output/wechat
     ├── wechat/       # 微信HTML
     ├── xiaohongshu/  # 小红书笔记
     ├── jike/         # 即刻动态
-    └── x/            # X/Twitter Thread
+    ├── x/            # X/Twitter Thread
+    └── poster/       # 内容海报图片
 ```

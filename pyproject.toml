@@ -17,6 +17,7 @@ dependencies = [
     "python-frontmatter>=1.0",
     "markdownify>=0.11",
     "requests>=2.31",
+    "playwright>=1.40",
 ]
 
 [project.optional-dependencies]

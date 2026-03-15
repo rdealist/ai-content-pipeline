@@ -1,6 +1,6 @@
 ---
 name: content-pipeline-publish
-description: "多平台内容分发Skill。将output/目录中已生成的内容按照SOP流程发布到各平台。支持X/Twitter（infsh CLI）、知乎、掘金、小红书、即刻。当用户说"发布内容"、"推送到平台"、"一键发布"时使用此Skill。"
+description: '多平台内容分发Skill。将output/目录中已生成的内容按照SOP流程发布到各平台。支持X/Twitter（infsh CLI）、知乎、掘金、小红书、即刻。当用户说"发布内容"、"推送到平台"、"一键发布"时使用此Skill。'
 metadata:
   version: 1.1.0
   domains: [publishing, automation, distribution]
